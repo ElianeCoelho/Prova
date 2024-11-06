@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD de Clientes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    input[type="text"] {
+      padding: 6px;
+      margin: 5px;
+      width: 80%;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .botao-editar {
+      background-color: #ff9800;
+      color: white;
+      border: none;
+    }
+    .botao-deletar {
+      background-color: #f44336;
+      color: white;
+      border: none;
+    }
+    .botao-adicionar {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cadastro de Clientes</h1>
+  <div>
+    <input type="text" id="nome" placeholder="Nome do Cliente">
+    <input type="text" id="email" placeholder="Email do Cliente">
+    <button class="botao-adicionar" onclick="adicionarCliente()">Adicionar Cliente</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="lista-clientes"></tbody>
+  </table>
+
+  <script>
+    let clientes = [];
+    let indiceEdicao = null;
+
+    // Função para renderizar a lista de clientes
+    function renderizarClientes() {
+      const listaClientes = document.getElementById('lista-clientes');
+      listaClientes.innerHTML = '';
+      clientes.forEach((cliente, indice) => {
+        listaClientes.innerHTML += `
+          <tr>
+            <td>${cliente.nome}</td>
+            <td>${cliente.email}</td>
+            <td>
+              <button class="botao-editar" onclick="editarCliente(${indice})">Editar</button>
+              <button class="botao-deletar" onclick="deletarCliente(${indice})">Deletar</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Função para adicionar ou atualizar um cliente
+    function adicionarCliente() {
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+
+      if (nome === '' || email === '') {
+        alert('Por favor, preencha todos os campos!');
+        return;
+      }
+
+      if (indiceEdicao === null) {
+        // Adiciona um novo cliente
+        clientes.push({ nome, email });
+      } else {
+        // Atualiza cliente existente
+        clientes[indiceEdicao] = { nome, email };
+        indiceEdicao = null;
+      }
+
+      document.getElementById('nome').value = '';
+      document.getElementById('email').value = '';
+      renderizarClientes();
+    }
+
+    // Função para editar um cliente
+    function editarCliente(indice) {
+      document.getElementById('nome').value = clientes[indice].nome;
+      document.getElementById('email').value = clientes[indice].email;
+      indiceEdicao = indice;
+    }
+
+    // Função para deletar um cliente
+    function deletarCliente(indice) {
+      clientes.splice(indice, 1);
+      renderizarClientes();
+    }
+
+    renderizarClientes();
+  </script>
+</body>
+</html>
